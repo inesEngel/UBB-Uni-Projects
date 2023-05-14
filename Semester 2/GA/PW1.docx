@@ -1,0 +1,131 @@
+Practical Work no.1
+Documentation
+
+This implementation uses the Python language. 
+For solving the assignment, we shall define:
+- a class named Graph which represents a directed graph
+-a class named UI, for testing the functionalities
+-2 additional functions:
+		-a function that reads from a file
+		-a function that writes in a file
+
+Implementation
+The class Graph provides the following methods:
+-dictionary_cost(self)
+-returns the dictionary of edges and costs of the graph
+-dictionary_in(self)
+	-returns the dictionary of inbound vertices of the graph
+-def dictionary_out(self)
+	-returns the dictionary of outbound vertices of the graph
+-def number_of_vertices(self)
+	-returns the number of vertices of the graph
+-def number_of_edges(self)
+	-returns the number of edges of the graph
+-def parse_vertices(self)
+	-iterator for the vertices of the graph
+-def parse_inbound(self, x)
+	-iterator for the inbound vertices of the vertex x
+-def parse_outbound(self, x)
+	- iterator for the outbound vertices of the vertex x
+-def parse_cost(self)
+	-iterator for the edges of the graph and their costs
+-def add_vertex(self, x)
+-adds a new vertex to the graph
+-precondition: the vertex must not already exist
+-def remove_vertex(self, x)
+	-removes a vertex from the graph
+	-precondition: the vertex must already exist
+-def in_degree(self, x)
+	-returns the in degree of the vertex or -1 if the vertex does not exist
+	-precondition: the vertex must already exist
+-def out_degree(self, x)
+	-returns the out degree of the vertex or -1 if the vertex does not exist
+	-precondition: the vertex must already exist
+-def add_edge(self, x, y, cost)
+	-adds a new edge to the graph
+	-precondition: the edge must not exist in the graph
+
+-def remove_edge(self, x, y)
+	-removes an edge from the graph
+	-precondition: the edge must exist in the graph
+-def find_if_edge(self, x, y)
+	-returns the cost of the edge
+	-precondition: the edge must already exist in the graph
+-def change_cost(self, x, y, cost)
+	-changes the cost of an edge
+	-precondition: the edge must already exist in the graph
+-def make_copy(self)
+	-returns a copy of the graph
+
+The additional functions provide the following methods:
+-def write_graph_to_file(graph, file)
+	-writes in a file the graph
+	-precondition: the graph should not be empty
+-def read_graph_from_file(file_name)
+	-reads the graph from the file received as an input
+	-precondition: the file must exist
+
+The class UI provides the following methods:
+-def add_empty_graph(self)
+	-creates an empty graph and adds it to the list of graphs in the program
+-def create_random_graph_ui(self)
+	-creates a random graph and adds it to the list of graphs in the program
+-def generate_random(vertices, edges)
+	-is a function that is used in the previous function to generate a random graph
+	-it raises a ValueError if the user provides too many edges
+-def read_graph_from_file_ui(self)
+	-takes the filename from the input and creates a new graph and adds it to the list of graphs
+-def write_graph_to_file_ui(self)
+	-writes the current graph that the program is working with to the file 
+-def switch_graph_ui(self)
+	-switches between the available graphs
+	-precondition: the graph to be switched to must exist
+-def get_number_of_vertices_ui(self)
+	-prints the number of vertices of the current graph
+-def get_number_of_edges_ui(self)
+	-prints the number of edges of the current graph
+-def list_all_outbound(self)
+	-prints all vertices of the current graph with all their outbound vertices
+-def list_outbound(self)
+	-prints the outbound vertices of the vertex received as an input
+-def list_all_inbound(self)
+	-prints all vertices of the current graph with all their inbound vertices
+-def list_inbound(self)
+	-prints the inbound vertices of the vertex received as an input
+
+-def list_all_costs(self)
+	-prints all the edges of the graph with their cost
+-def parse_all_vertices(self)
+	-prints all the vertices of the graph
+-def add_vertex_ui(self)
+	-adds the vertex received as an input to the graph
+-def delete_vertex_ui(self)
+	-deleted the vertex received as an input from the graph
+-def add_edge_ui(self)
+	-uses the add_edge function to add an edge with a cost to the graph with the 2 vertices and the cost received as inputs
+-def remove_edge_ui(self)
+	-uses the remove_edge function to delete an edge between the 2 vertices received as inputs
+-def modify_cost_ui(self)
+	-uses the change_cost function to change the cost of an edge between the vertices received as inputs
+-def get_in_degree_ui(self)
+	-prints the in degree of a vertex received as an input
+-def get_out_degree_ui(self)
+	-prints the out degree of a vertex received as an input
+-def check_if_edge_ui(self)
+	-checks if the edge received as an input exists
+-def copy_current_graph_ui(self)
+	-creates a copy of the graph using the make_copy function
+-def print_menu()
+	-prints the options that the user has
+-def start(self)
+	-starts the program
+	-at the beginning the program, the current graph is initialized with an empty graph 
+	-the graph can be stored in an output file and used at another run of the application
+
+
+
+
+
+
+
+
