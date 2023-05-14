@@ -1,0 +1,42 @@
+     1                                  bits 32
+     2                                  
+     3                                  global start
+     4                                  
+     5                                  extern exit
+     6                                  
+     7                                  import exit msvcrt.dll
+     8                                  
+     9                                  segment data use32 class=data
+    10 00000000 010204060A1419              s db 1, 2, 4, 6, 10, 20, 25
+    11                                      len equ $ - s - 1
+    12 00000007 00<rept>                    d times len db 0
+    13                                  
+    14                                  segment code use32 class=code
+    15                                  start:
+    16 00000000 BE[00000000]                mov esi, s
+    17 00000005 BF[07000000]                mov edi, d
+    18 0000000A B906000000                  mov ecx, len
+    19 0000000F FC                          cld
+    20                                      
+    21                                      repeat:
+    22 00000010 AC                              lodsb
+    23 00000011 8B1E                            mov ebx, [esi]
+    24                                          
+    25 00000013 38D8                            cmp al, bl
+    26 00000015 7707                            ja first_greater
+    27                                  
+    28 00000017 28C3                            sub bl, al
+    29 00000019 88D8                            mov al, bl
+    30 0000001B AA                              stosb
+    31                                          
+    32 0000001C EB04                            jmp loop_end
+    33                                          first_greater:
+    34 0000001E 28D8                                sub al, bl
+    35 00000020 AA                                  stosb
+    36                                          
+    37 00000021 46                              inc esi
+    38                                          loop_end:
+    39 00000022 E2EC                        loop repeat
+    40                                      
+    41 00000024 6A00                        push dword 0
+    42 00000026 FF15[00000000]              call [exit]

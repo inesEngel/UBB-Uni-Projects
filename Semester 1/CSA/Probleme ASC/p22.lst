@@ -1,0 +1,47 @@
+     1                                  bits 32
+     2                                  
+     3                                  global start
+     4                                  
+     5                                  extern exit
+     6                                  
+     7                                  import exit msvcrt.dll
+     8                                  
+     9                                  segment data use32 class=data
+    10 00000000 010306020307                s1 db 1, 3, 6, 2, 3, 7
+    11 00000006 060308010205                s2 db 6, 3, 8, 1, 2, 5
+    12                                      len equ $ - s2
+    13 0000000C 00<rept>                    d times len db 0
+    14                                      
+    15                                  ; Two byte strings S1 and S2 of the same length are given. 
+    16                                  ; Obtain the string D where each element contains the minimum of the corresponding elements from S1 and S2.
+    17                                  segment code use32 class=code
+    18                                  start:
+    19 00000000 BE[00000000]                mov esi, s1
+    20 00000005 BF[0C000000]                mov edi, d
+    21 0000000A B906000000                  mov ecx, len
+    22 0000000F BA[06000000]                mov edx, s2
+    23 00000014 FC                          cld
+    24                                      
+    25                                      repeat:
+    26 00000015 AC                              lodsb
+    27                                          
+    28 00000016 8B1A                            mov ebx, [edx]
+    29                                          
+    30 00000018 38D8                            cmp al, bl
+    31                                          
+    32 0000001A 7605                            jbe first_lower
+    33                                          
+    34 0000001C 88D8                            mov al, bl
+    35 0000001E AA                              stosb
+    36                                              
+    37 0000001F EB01                            jmp loop_end
+    38                                          
+    39                                          first_lower:
+    40 00000021 AA                                  stosb
+    41                                          
+    42                                          loop_end:
+    43 00000022 42                                  inc edx
+    44 00000023 E2F0                        loop repeat
+    45                                      
+    46 00000025 6A00                        push dword 0
+    47 00000027 FF15[00000000]              call [exit]

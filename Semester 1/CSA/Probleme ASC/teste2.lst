@@ -1,0 +1,58 @@
+     1                                  bits 32
+     2                                  
+     3                                  global start
+     4                                  
+     5                                  extern exit, printf
+     6                                  
+     7                                  import exit msvcrt.dll
+     8                                  import printf msvcrt.dll
+     9                                  
+    10                                  segment data use32 class=data
+    11 00000000 78A63412345678122B-         sir dd 1234A678h, 12785634h, 1A4D3C2Bh
+    11 00000009 3C4D1A             
+    12                                      len equ ($ - sir) / 4
+    13 0000000C 0000<rept>                  d times len dw 0
+    14 00000012 256400                      format db '%d', 0
+    15                                  
+    16                                  segment code use32 class=code
+    17                                  start:
+    18 00000000 BE[00000000]                mov esi, sir
+    19 00000005 BF[0C000000]                mov edi, d
+    20 0000000A B903000000                  mov ecx, len
+    21                                      
+    22                                      repeat:
+    23 0000000F 8A7E01                          mov bh, [esi + 1]
+    24 00000012 8A5E03                          mov bl, [esi + 3]
+    25                                          
+    26 00000015 6689D8                          mov ax, bx
+    27 00000018 66AB                            stosw
+    28                                          
+    29 0000001A 83C604                          add esi, 4
+    30                                      
+    31 0000001D E2F0                        loop repeat
+    32                                      
+    33 0000001F BE[0C000000]                mov esi, d
+    34 00000024 B903000000                  mov ecx, len
+    35 00000029 BB00000000                  mov ebx, 0
+    36 0000002E B800000000                  mov eax, 0
+    37                                      
+    38                                      repeat2:
+    39 00000033 66AD                            lodsw
+    40 00000035 51                              push ecx
+    41 00000036 B910000000                      mov ecx, 16
+    42                                          
+    43                                          repeat3:
+    44 0000003B 66D1E8                              shr ax, 1
+    45 0000003E 83D300                              adc ebx, 0
+    46                                          
+    47 00000041 E2F8                            loop repeat3
+    48 00000043 59                              pop ecx
+    49 00000044 E2ED                        loop repeat2
+    50                                      
+    51 00000046 53                          push ebx
+    52 00000047 68[12000000]                push dword format
+    53                                      
+    54 0000004C FF15[00000000]              call [printf]
+    55                                      
+    56 00000052 6A00                        push dword 0
+    57 00000054 FF15[00000000]              call [exit]

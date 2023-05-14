@@ -1,0 +1,68 @@
+     1                                  bits 32
+     2                                  
+     3                                  global start
+     4                                  
+     5                                  extern exit
+     6                                  
+     7                                  import exit msvcrt.dll
+     8                                  
+     9                                  segment data use32 class=data
+    10 00000000 2B3432614033242A            s db '+', '4', '2', 'a', '@', '3', '$', '*'
+    11                                      len equ $ - s
+    12 00000008 00<rept>                    s2 times len db 0
+    13                                  ; !@#$%^&*
+    14                                  segment code use32 class=code
+    15                                  start:
+    16 00000000 BE[00000000]                mov esi, s
+    17 00000005 BF[08000000]                mov edi, s2
+    18 0000000A FC                          cld
+    19 0000000B B800000000                  mov eax, 0
+    20 00000010 B908000000                  mov ecx, len
+    21                                      repeat:
+    22 00000015 8A1E                            mov bl, [esi]
+    23                                          
+    24 00000017 B021                            mov al, '!'
+    25 00000019 38D8                            cmp al, bl
+    26 0000001B 742C                            jz add_to_string
+    27                                          
+    28 0000001D B040                            mov al, '@'
+    29 0000001F 38D8                            cmp al, bl
+    30 00000021 7426                            jz add_to_string
+    31                                          
+    32 00000023 B023                            mov al, '#'
+    33 00000025 38D8                            cmp al, bl
+    34 00000027 7420                            jz add_to_string
+    35                                          
+    36 00000029 B024                            mov al, '$'
+    37 0000002B 38D8                            cmp al, bl
+    38 0000002D 741A                            jz add_to_string
+    39                                          
+    40 0000002F B025                            mov al, '%'
+    41 00000031 38D8                            cmp al, bl
+    42 00000033 7414                            jz add_to_string
+    43                                          
+    44 00000035 B05E                            mov al, '^'
+    45 00000037 38D8                            cmp al, bl
+    46 00000039 740E                            jz add_to_string
+    47                                          
+    48 0000003B B026                            mov al, '&'
+    49 0000003D 38D8                            cmp al, bl
+    50 0000003F 7408                            jz add_to_string
+    51                                          
+    52 00000041 B02A                            mov al, '*'
+    53 00000043 38D8                            cmp al, bl
+    54 00000045 7402                            jz add_to_string
+    55                                          
+    56 00000047 EB07                            jmp loop_end
+    57                                          add_to_string:
+    58 00000049 B000                                mov al, 0
+    59 0000004B 8A06                                mov al, [esi]
+    60 0000004D 8807                                mov [edi], al
+    61 0000004F 47                                  inc edi
+    62                                          
+    63                                          loop_end:
+    64 00000050 46                                  inc esi
+    65 00000051 E2C2                        loop repeat
+    66                                      
+    67 00000053 6A00                        push dword 0
+    68 00000055 FF15[00000000]              call [exit]

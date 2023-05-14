@@ -1,0 +1,44 @@
+     1                                  bits 32
+     2                                  
+     3                                  global start
+     4                                  
+     5                                  extern exit
+     6                                  
+     7                                  import exit msvcrt.dll
+     8                                  
+     9                                  segment data use32 class=data
+    10 00000000 01020304                    s1 db 1, 2, 3, 4
+    11                                      len1 equ $ - s1
+    12 00000004 050607                      s2 db 5, 6, 7
+    13                                      len2 equ $ - s2
+    14 00000007 00<rept>                    s3 times (len1 + len2) db 0
+    15                                      
+    16                                  segment code use32 class=code
+    17                                  start:
+    18 00000000 BE[00000000]                mov esi, s1
+    19 00000005 BF[07000000]                mov edi, s3
+    20 0000000A FC                          cld
+    21                                      
+    22 0000000B B904000000                  mov ecx, len1
+    23                                      
+    24                                      repeat:
+    25 00000010 8A06                            mov al, [esi]
+    26 00000012 8807                            mov [edi], al
+    27                                          
+    28 00000014 46                              inc esi
+    29 00000015 47                              inc edi
+    30 00000016 E2F8                        loop repeat
+    31                                      
+    32 00000018 FD                          std
+    33 00000019 BE[06000000]                mov esi, s2 + len2 - 1
+    34 0000001E B903000000                  mov ecx, len2
+    35                                      
+    36                                      repeat2:
+    37 00000023 AC                              lodsb
+    38 00000024 FC                              cld
+    39 00000025 AA                              stosb
+    40 00000026 FD                              std
+    41 00000027 E2FA                        loop repeat2
+    42                                      
+    43 00000029 6A00                        push dword 0
+    44 0000002B FF15[00000000]              call [exit]

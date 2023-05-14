@@ -1,0 +1,38 @@
+     1                                  bits 32
+     2                                  
+     3                                  global start
+     4                                  
+     5                                  extern exit
+     6                                  
+     7                                  import exit msvcrt.dll
+     8                                  
+     9                                  segment data use32 class=data
+    10 00000000 61416242322578              s db 'a', 'A', 'b', 'B', '2', '%', 'x'
+    11                                      len equ $ - s
+    12 00000007 00<rept>                    d times len db 0
+    13                                  segment code use32 class=code
+    14                                  start:
+    15 00000000 BE[00000000]                mov esi, s
+    16 00000005 BF[07000000]                mov edi, d
+    17 0000000A FC                          cld
+    18 0000000B B907000000                  mov ecx, len
+    19                                      
+    20                                      repeat:
+    21 00000010 AC                              lodsb
+    22                                          
+    23 00000011 B361                            mov bl, 'a'
+    24 00000013 38D8                            cmp al, bl
+    25                                          
+    26 00000015 7207                            jb loop_end
+    27                                          
+    28 00000017 B37A                            mov bl, 'z'
+    29 00000019 38D8                            cmp al, bl
+    30 0000001B 7701                            ja loop_end
+    31                                          
+    32 0000001D AA                              stosb
+    33                                          
+    34                                          loop_end:
+    35 0000001E E2F0                        loop repeat
+    36                                  
+    37 00000020 6A00                        push dword 0
+    38 00000022 FF15[00000000]              call [exit]

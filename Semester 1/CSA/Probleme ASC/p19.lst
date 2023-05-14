@@ -1,0 +1,74 @@
+     1                                  bits 32
+     2                                  
+     3                                  global start
+     4                                  
+     5                                  extern exit
+     6                                  
+     7                                  import exit msvcrt.dll
+     8                                  
+     9                                  segment data use32 class=data
+    10 00000000 02                          x db 2
+    11 00000001 020103FDFC02FA              a db 2, 1, 3, -3, -4, 2, -6
+    12                                      len1 equ $ - a
+    13 00000008 0405FB07FAFE01              b db 4, 5, -5, 7, -6, -2, 1
+    14                                      len2 equ $ - b
+    15 0000000F 00<rept>                    r times (len1 + len2) db 0
+    16                                  
+    17                                  segment code use32 class=code
+    18                                  start:
+    19 00000000 BE[01000000]                mov esi, a
+    20 00000005 BF[0F000000]                mov edi, r
+    21 0000000A FC                          cld
+    22 0000000B B907000000                  mov ecx, len1
+    23                                      
+    24                                      repeat:
+    25 00000010 B800000000                      mov eax, 0
+    26 00000015 AC                              lodsb
+    27 00000016 88C3                            mov bl, al
+    28                                          
+    29 00000018 F635[00000000]                  div byte[x]
+    30                                          
+    31 0000001E B000                            mov al, 0
+    32                                          
+    33 00000020 38C4                            cmp ah, al
+    34                                          
+    35 00000022 7507                            jnz loop_end
+    36                                          
+    37 00000024 38C3                            cmp bl, al
+    38                                          
+    39 00000026 7D03                            jge loop_end
+    40                                          
+    41 00000028 88D8                            mov al, bl
+    42 0000002A AA                              stosb
+    43                                          
+    44                                          loop_end:
+    45 0000002B E2E3                        loop repeat
+    46                                      
+    47 0000002D BE[08000000]                mov esi, b
+    48 00000032 B907000000                  mov ecx, len2
+    49                                      
+    50                                      repeat2:
+    51 00000037 B800000000                      mov eax, 0
+    52 0000003C AC                              lodsb
+    53 0000003D 88C3                            mov bl, al
+    54                                          
+    55 0000003F F635[00000000]                  div byte[x]
+    56                                          
+    57 00000045 B000                            mov al, 0
+    58                                          
+    59 00000047 38C4                            cmp ah, al
+    60                                          
+    61 00000049 7507                            jnz loop_end2
+    62                                          
+    63 0000004B 38C3                            cmp bl, al
+    64                                          
+    65 0000004D 7D03                            jge loop_end2
+    66                                          
+    67 0000004F 88D8                            mov al, bl
+    68 00000051 AA                              stosb
+    69                                          
+    70                                          loop_end2:
+    71 00000052 E2E3                        loop repeat2
+    72                                  
+    73 00000054 6A00                        push dword 0
+    74 00000056 FF15[00000000]              call [exit]

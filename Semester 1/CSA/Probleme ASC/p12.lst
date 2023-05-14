@@ -1,0 +1,75 @@
+     1                                  bits 32
+     2                                  
+     3                                  global start
+     4                                  
+     5                                  extern exit
+     6                                  
+     7                                  import exit msvcrt.dll
+     8                                  
+     9                                  segment data use32 class=data
+    10 00000000 02                          x db 2
+    11 00000001 616263646566                s1 db 'a', 'b', 'c', 'd', 'e', 'f'
+    12                                      len1 equ $ - s1
+    13 00000007 3132333435                  s2 db '1', '2', '3', '4', '5'
+    14                                      len2 equ $ - s2
+    15 0000000C 00<rept>                    d times (len1 + len2) db 0
+    16                                      
+    17                                  ;Obtain the string D by concatenating the elements found on even positions in S2 and the elements found on odd positions in S1.
+    18                                  ; D: '2', '4','a','c','e'
+    19                                  segment code use32 class=code
+    20                                  start:
+    21 00000000 BE[07000000]                mov esi, s2
+    22 00000005 BF[0C000000]                mov edi, d
+    23 0000000A B905000000                  mov ecx, len2
+    24 0000000F FC                          cld
+    25 00000010 BA01000000                  mov edx, 1
+    26                                      
+    27                                      repeat:
+    28 00000015 89D0                            mov eax, edx
+    29                                          
+    30 00000017 F635[00000000]                  div byte[x]
+    31                                          
+    32 0000001D B000                            mov al, 0
+    33                                          
+    34 0000001F 38C4                            cmp ah, al
+    35                                          
+    36 00000021 7508                            jnz loop_end
+    37                                          
+    38 00000023 B800000000                      mov eax, 0
+    39 00000028 AC                              lodsb
+    40 00000029 AA                              stosb
+    41 0000002A 4E                              dec esi
+    42                                          
+    43                                          loop_end:
+    44 0000002B 46                                  inc esi
+    45 0000002C 42                                  inc edx
+    46 0000002D E2E6                        loop repeat
+    47                                      
+    48 0000002F B906000000                  mov ecx, len1
+    49 00000034 BA01000000                  mov edx, 1
+    50 00000039 BE[01000000]                mov esi, s1
+    51                                      
+    52                                      repeat2:
+    53 0000003E 89D0                            mov eax, edx
+    54                                          
+    55 00000040 F635[00000000]                  div byte[x]
+    56                                          
+    57 00000046 B000                            mov al, 0
+    58                                          
+    59 00000048 38C4                            cmp ah, al
+    60                                          
+    61 0000004A 7408                            jz loop_end2
+    62                                          
+    63 0000004C B800000000                      mov eax, 0
+    64 00000051 AC                              lodsb
+    65 00000052 AA                              stosb
+    66 00000053 4E                              dec esi
+    67                                          
+    68                                          loop_end2:
+    69 00000054 46                                  inc esi
+    70 00000055 42                                  inc edx
+    71 00000056 E2E6                        loop repeat2
+    72                                      
+    73                                      
+    74 00000058 6A00                        push dword 0
+    75 0000005A FF15[00000000]              call [exit]

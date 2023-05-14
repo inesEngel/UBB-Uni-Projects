@@ -1,0 +1,66 @@
+     1                                  bits 32
+     2                                  
+     3                                  global start
+     4                                  
+     5                                  extern exit
+     6                                  
+     7                                  import exit msvcrt.dll
+     8                                  
+     9                                  segment data use32 class=data
+    10 00000000 02                          x db 2
+    11 00000001 616263626566                s1 db 'a', 'b', 'c', 'b', 'e', 'f'
+    12                                      len1 equ $ - s1
+    13 00000007 3132333435                  s2 db '1', '2', '3', '4', '5'
+    14                                      len2 equ $ - s2
+    15 0000000C 00<rept>                    d times (len1 + len2) db 0
+    16                                  
+    17                                  segment code use32 class=code
+    18                                  start:
+    19 00000000 BA01000000                  mov edx, 1
+    20 00000005 BE[07000000]                mov esi, s2
+    21 0000000A BF[0C000000]                mov edi, d
+    22 0000000F FC                          cld
+    23 00000010 B905000000                  mov ecx, len2
+    24                                      
+    25                                      repeat:
+    26 00000015 89D0                            mov eax, edx
+    27                                          
+    28 00000017 F635[00000000]                  div byte[x]
+    29                                          
+    30 0000001D B000                            mov al, 0
+    31 0000001F 38C4                            cmp ah, al
+    32                                          
+    33 00000021 7403                            jz loop_end
+    34 00000023 AC                              lodsb
+    35 00000024 AA                              stosb
+    36 00000025 4E                              dec esi
+    37                                          
+    38                                          loop_end:
+    39 00000026 42                                  inc edx
+    40 00000027 46                                  inc esi
+    41 00000028 E2EB                        loop repeat
+    42                                      
+    43 0000002A BE[01000000]                mov esi, s1
+    44 0000002F B906000000                  mov ecx, len1
+    45 00000034 BA01000000                  mov edx, 1
+    46                                      
+    47                                      repeat2:
+    48 00000039 89D0                            mov eax, edx
+    49                                          
+    50 0000003B F635[00000000]                  div byte[x]
+    51                                          
+    52 00000041 B000                            mov al, 0
+    53 00000043 38C4                            cmp ah, al
+    54                                          
+    55 00000045 7503                            jnz loop_end2
+    56 00000047 AC                              lodsb
+    57 00000048 AA                              stosb
+    58 00000049 4E                              dec esi
+    59                                          
+    60                                          loop_end2:
+    61 0000004A 42                                  inc edx
+    62 0000004B 46                                  inc esi
+    63 0000004C E2EB                        loop repeat2
+    64                                  
+    65 0000004E 6A00                        push dword 0
+    66 00000050 FF15[00000000]              call [exit]
