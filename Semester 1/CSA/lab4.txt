@@ -1,0 +1,32 @@
+bits 32 ; assembling for the 32 bits architecture
+
+; declare the EntryPoint (a label defining the very first instruction of the program)
+global start        
+
+; declare external functions needed by our program
+extern exit               ; tell nasm that exit exists even if we won't be defining it
+import exit msvcrt.dll
+segment data use32 class=data
+    a dw 010010110011b
+    b dw 000111110001b
+    c dd 0
+
+;Given the words A and B, compute the doubleword C as follows:
+;the bits 0-4 of C are the same as the bits 11-15 of A
+;the bits 5-11 of C have the value 1
+;the bits 12-15 of C are the same as the bits 8-11 of B
+;the bits 16-31 of C are the same as the bits of A
+segment code use32 class=code
+    start:
+        ;a
+        mov ax, [a]
+        shr ax, 11
+        or [c], ax
+        ;b
+        or ax, 111111100000b
+        ;c
+        mov ax, [b]
+        shr ax,8
+        or [c], ax
+        push    dword 0      ; push the parameter for exit onto the stack
+        call    [exit]       ; call exit to terminate the program
